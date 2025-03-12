@@ -1,0 +1,41 @@
+﻿@page "/anos/cadastrar"
+
+<PageTitle>Cadastrar</PageTitle>
+<hr style="color:blue" />
+<h1 style="color:blue">Cadastrar Ano</h1>
+<hr style="color:blue" />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Ano" OnValidSubmit="AdicionarAno" FormName="FormCadastrar" Enhance>
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="mb-3">
+                <label for="anodocadastro" class="form-label">AnoDoCadastro:</label>
+                <InputNumber id="anodocadastro" @bind-Value="Ano.AnoDoCadastro" class="form-control" />
+                <DataAnnotationsValidator />
+                <ValidationSummary/>               
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/anos">Voltar para a listagem de anos.</a>
+</div>
+@code {
+    [SupplyParameterFromForm()]
+    private Ano Ano { get; set; } = new();
+
+    private async Task AdicionarAno()
+    {
+        if (Ano.Id <= 0)
+        {
+            await _anoService.AdicionarAno(Ano);
+            NavigationManager.NavigateTo("/anos");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/anos");
+        }  
+    }
+}

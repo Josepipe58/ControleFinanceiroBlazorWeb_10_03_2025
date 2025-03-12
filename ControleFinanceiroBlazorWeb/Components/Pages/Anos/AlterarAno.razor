@@ -1,0 +1,54 @@
+﻿@page "/anos/editar"
+@rendermode InteractiveServer
+ 
+<PageTitle>Editar</PageTitle>
+<hr style="color:blue" />
+<h1 style="color:blue">Editar Ano</h1>
+<hr style="color:blue" />
+@if (Ano is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Ano" OnValidSubmit="AtualizarAno" FormName="FormAlterar" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert" />
+                <label for="idAno" class="form-label">Código:</label>
+                <input class="form-control" name="Ano.Id" value="@Ano.Id" disabled />
+                <div class="mb-3">
+                    <label for="anodocadastro" class="form-label">AnoDoCadastro:</label>
+                    <InputNumber id="anodocadastro" @bind-Value="Ano.AnoDoCadastro" class="form-control" />
+                    <ValidationMessage For="() => Ano.AnoDoCadastro" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </EditForm>
+        </div>
+    </div>}
+<div>
+    <a href="/anos">Voltar para a listagem de anos.</a>
+</div>
+
+@code {    
+    [SupplyParameterFromForm()]
+    private Ano Ano { get; set; } = new();    
+    [SupplyParameterFromQuery]
+    public int Id { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {       
+        Ano = await _anoService.ObterAnoPorId(Id);//_anoRepository.ObterPorIdAsync(Id);
+    if (Ano.Id <= 0)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task AtualizarAno()
+    {
+        await _anoService.EditarAno(Ano);// _anoRepository.EditarAsync(Ano);//
+        NavigationManager.NavigateTo("/anos");
+    }
+}

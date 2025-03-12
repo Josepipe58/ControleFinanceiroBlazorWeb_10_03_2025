@@ -1,0 +1,49 @@
+﻿@page "/anos/excluir"
+
+<PageTitle>Excluir</PageTitle>
+<hr style="color:blue"/>
+<h1 style="color:blue">Excluir Ano</h1>
+
+<p style="color:red">Tem certeza de que deseja excluir esse item?</p>
+<div>
+    <hr style="color:blue" />
+    @if (Ano is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">Código</dt>
+            <dd class="col-sm-10">@Ano.Id</dd>
+            <dt class="col-sm-2">AnoDoCadastro</dt>
+            <dd class="col-sm-10">@Ano.AnoDoCadastro</dd>
+        </dl>
+        <EditForm method="post" Model="Ano" OnValidSubmit="Excluir" FormName="FormExcluir" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(Ano is null)">Excluir</button> |
+            <a href="/anos">Voltar para a listagem de anos.</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private Ano Ano;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {        
+        Ano = await _anoService.ObterAnoPorId(Id); //_anoRepository.ObterPorIdAsync(Id);
+        if (Ano.Id <= 0)
+        {
+            NavigationManager.NavigateTo($"Erro ao excluir o ano informado.");
+        }
+    }
+
+    private async Task Excluir()
+    {
+        await _anoService.ExcluirAno(Id); //_anoRepository.ExcluirAsync(Ano.Id);
+        NavigationManager.NavigateTo("/anos");
+    }
+}

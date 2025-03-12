@@ -1,0 +1,39 @@
+﻿@page "/anos"
+@using Microsoft.AspNetCore.Mvc
+
+<PageTitle>Index</PageTitle>
+<hr style="color:blue"/>
+<h1 style="color:blue">Página Inicial de Anos</h1>
+<p>
+    <a href="anos/cadastrar">Criar Novo Cadastro</a>
+</p>
+@if(ListaDeAnos is not null)
+{
+    <TableTemplate RowType="Ano" RowData="ListaDeAnos">
+        <Header>
+            <tr><th>Código</th><th>Ano do Cadastro</th><th>Menu de Opções</th></tr>
+        </Header>
+        <RowTemplate Context="ano">
+            <td>@ano.Id</td>
+            <td>@ano.AnoDoCadastro</td>
+            <td>
+                <a href="@($"anos/editar?id={ano.Id}")">Editar</a> |
+                <a href="@($"anos/excluir?id={ano.Id}")">Excluir</a>
+            </td>
+        </RowTemplate>
+    </TableTemplate>
+}
+else
+{
+    <DisplayMessage ErrorMessage="@errorMessage" />
+}
+@code {   
+    public Ano Ano;
+    public IEnumerable<Ano> ListaDeAnos = new List<Ano>();   
+    private string errorMessage = string.Empty; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaDeAnos = await _anoService.ObterListaDeAnos();
+    }
+}

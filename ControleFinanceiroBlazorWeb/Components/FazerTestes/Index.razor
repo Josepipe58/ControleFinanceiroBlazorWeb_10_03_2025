@@ -1,0 +1,59 @@
+﻿@page "/teste"
+@*@inject IJSRuntime js;*@
+
+<h3>Lista de Tarefas</h3>
+
+@if (ListaDeAnos == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Ano do Cadastro</th>                
+                <th>Editar</th>
+                <th>Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ano in ListaDeAnos)
+            {
+                <tr>
+                    <td>@ano.Id</td>
+                    <td>@ano.AnoDoCadastro</td>                    
+                    <td><input type="button" class="btn btn-primary" value="Editar" /></td>
+                    <td><input type="button" class="btn btn-danger" value="Excluir" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+   <input type="button" data-toggle="modal" data-target="#tarefaModal"
+      class="btn btn-primary" value="Nova Tarefa"
+                        @onclick="(() => InitializeTarefaObject())" />
+</div>
+
+    <TesteDetalhes AnoDTO=anoDTOIndex></TesteDetalhes>
+}
+
+@code {
+    
+    Ano anoIndex = new Ano();
+    IEnumerable<Ano> ListaDeAnos;
+    string cabecalho = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaDeAnos = await _anoService.ObterListaDeAnos();
+    }
+
+    private void InitializeTarefaObject()
+    {
+        anoIndex = new Ano();
+        cabecalho = "Nova Tarefa";
+    }
+}
