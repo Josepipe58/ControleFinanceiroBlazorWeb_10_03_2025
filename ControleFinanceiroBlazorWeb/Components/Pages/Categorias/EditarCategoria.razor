@@ -1,0 +1,59 @@
+﻿@page "/categorias/editar"
+@rendermode InteractiveServer
+ 
+<PageTitle>EditarCategoria</PageTitle>
+<hr style="color:blue" />
+<h1 style="color:blue">Editar Categoria</h1>
+<hr style="color:blue" />
+@if (Categoria is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Categoria" OnValidSubmit="AtualizarCategoria" FormName="FormAlterar" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert" />
+                <label for="forId" class="form-label">Código:</label>
+                <input class="form-control" name="Categoria.Id" value="@Categoria.Id" disabled />
+                <div class="mb-3">
+                    <label for="forNomeCategoria" class="form-label">Nome da Categoria:</label>
+                    <InputText id="idNomeCategoria" @bind-Value="Categoria.NomeDaCategoria" class="form-control" />
+                    <ValidationMessage For="() => Categoria.NomeDaCategoria" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="forNomeFiltro" class="form-label">Código:</label>
+                    <InputNumber id="idNomeFiltro" @bind-Value="Categoria.FiltrarCategoriaId" class="form-control" />
+                    <ValidationMessage For="() => Categoria.FiltrarCategoriaId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </EditForm>
+        </div>
+    </div>}
+<div>
+    <a href="/categorias">Voltar para a listagem de categorias.</a>
+</div>
+
+@code {    
+    [SupplyParameterFromForm()]
+    private Categoria Categoria { get; set; } = new();
+    [SupplyParameterFromQuery]
+    public int Id { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {       
+        Categoria = await _categoriaService.ObterCategoriaPorId(Id);
+        if (Categoria.Id <= 0)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task AtualizarCategoria()
+    {
+        await _categoriaService.EditarCategoria(Categoria);
+        NavigationManager.NavigateTo("/categorias");
+    }
+}

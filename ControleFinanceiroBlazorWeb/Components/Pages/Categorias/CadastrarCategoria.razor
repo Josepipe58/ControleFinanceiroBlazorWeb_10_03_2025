@@ -1,0 +1,45 @@
+﻿@page "/categorias/cadastrar"
+
+<PageTitle>Cadastrar</PageTitle>
+<hr style="color:blue" />
+<h1 style="color:blue">Cadastrar Categoria</h1>
+<hr style="color:blue" />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Categoria" OnValidSubmit="AdicionarCategoria" FormName="FormCadastrar" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="mb-3">
+                <label for="forNomeCategoria" class="form-label">Nome da Categoria:</label>
+                <InputText id="idNomeCategoria" @bind-Value="Categoria.NomeDaCategoria" class="form-control" />
+                <ValidationMessage For="() => Categoria.NomeDaCategoria" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="forFiltrarCategoria" class="form-label">Nome do Filtro:</label>
+                <InputNumber id="idFiltrarCategoria" @bind-Value="Categoria.FiltrarCategoriaId" class="form-control" />
+                <ValidationMessage For="() => Categoria.FiltrarCategoriaId" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </EditForm>
+    </div>
+</div>
+<div>
+    <a href="/categorias">Voltar para a listagem de categorias.</a>
+</div>
+@code {
+    [SupplyParameterFromForm()]
+    private Categoria Categoria { get; set; } = new();
+
+    private async Task AdicionarCategoria()
+    {
+        if (Categoria.Id <= 0)
+        {
+            await _categoriaService.AdicionarCategoria(Categoria);
+            NavigationManager.NavigateTo("/categorias");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/categorias");
+        }  
+    }
+}

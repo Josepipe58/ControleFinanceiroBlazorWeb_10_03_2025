@@ -1,0 +1,82 @@
+﻿@page "/relacionamento/categorias"
+@rendermode InteractiveServer
+@inject Categoria categoria
+@inject SubCategoria subCategoria
+
+<h3>Relacionamento Entre Categoria e SubCategoria</h3>
+
+<PageTitle>Cadastrar</PageTitle>
+<hr style="color:blue" />
+<h1 style="color:blue">Cadastrar Ano</h1>
+<hr style="color:blue" />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Categoria" OnValidSubmit="AdicionarCategoria" FormName="FormCadastrar" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="mb-3">
+                <label for="nomedacategoria" class="form-label">Nome da Categoria:</label>
+                <InputNumber id="nomedacategoria" @bind-Value="Categoria.NomeDaCategoria" class="form-control" />
+                <ValidationMessage For="() => Categoria.NomeDaCategoria" class="text-danger" />
+            </div>
+            <div class="form-group row">
+                <label form="categoria">Categoria</label>
+                <div class="col-sm-4">
+                    <select @onchange="CategoriaSelectionChanged" class="form-control">
+                        @if (ListaDeCategorias != null)
+                        {
+                            @foreach (var categoria in ListaDeCategorias)
+                            {
+                                <option value="@categoria.Id" selected="@(categoria.Id == SubCategoria.CategoriaId ? true : false)">
+                                    @categoria.NomeDaCategoria
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+
+            <button type="submit" class="btn btn-danger" @onclick="@(() => NavigationManager.NavigateTo("subcategorias"))">Cancelar</button>
+        </EditForm>
+    </div>
+</div>
+<div>
+    <a href="/anos">Voltar para a listagem de categorias.</a>
+</div>
+@code {
+    //Link do vídeo do Macoratti: https://www.youtube.com/watch?v=NGpbYxeos1A&list=PLJ4k1IC8GhW2v0nCR7K-tZeoHwqfPZs5t&index=29
+    public Categoria Categoria;
+    public SubCategoria SubCategoria;
+    public List<Categoria> ListaDeCategorias = [];// new List<Categoria>();
+    private string errorMessage = string.Empty;    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarCategoria();
+        if (SubCategoria.CategoriaId == 0)
+        {
+            SubCategoria.CategoriaId = ListaDeCategorias[0].Id;
+        }
+    }
+
+    public async Task CarregarCategoria()
+    {
+        //ListaDeCategorias = await _anoService.ObterListaDeCategorias();
+    }
+
+    public async Task AdicionarCategoria()
+    {
+
+    }
+
+    public void CategoriaSelectionChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            SubCategoria.CategoriaId = id;
+        }
+    }
+}
+

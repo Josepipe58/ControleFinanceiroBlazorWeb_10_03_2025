@@ -7,18 +7,17 @@
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="Ano" OnValidSubmit="AdicionarAno" FormName="FormCadastrar" Enhance>
+            <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="mb-3">
                 <label for="anodocadastro" class="form-label">AnoDoCadastro:</label>
                 <InputNumber id="anodocadastro" @bind-Value="Ano.AnoDoCadastro" class="form-control" />
-                <DataAnnotationsValidator />
-                <ValidationSummary/>               
+                <ValidationMessage For="() => Ano.AnoDoCadastro" class="text-danger" />                              
             </div>
             <button type="submit" class="btn btn-primary">Cadastrar</button>
         </EditForm>
     </div>
 </div>
-
 <div>
     <a href="/anos">Voltar para a listagem de anos.</a>
 </div>

@@ -6,17 +6,17 @@ namespace Infrastructure.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly AppDbContext _contexto;
+        protected readonly AppDbContext _context;
         protected readonly DbSet<TEntity> DbSet;     
-        public Repository(AppDbContext contexto)
+        public Repository(AppDbContext context)
         {
-            _contexto = contexto;
-            DbSet = _contexto.Set<TEntity>();
+            _context = context;
+            DbSet = _context.Set<TEntity>();
         }
 
         public async Task<IEnumerable<TEntity>> ObterTodosAsync()
         {
-            if (_contexto is not null && DbSet is not null)
+            if (_context is not null && DbSet is not null)
             {
                 var listarTodos = await DbSet.AsNoTracking().ToListAsync();
                 return listarTodos;
@@ -42,10 +42,10 @@ namespace Infrastructure.Repositories
 
         public async Task<TEntity> AdicionarAsync(TEntity entity)
         {
-            if (_contexto is not null && DbSet is not null)
+            if (_context is not null && DbSet is not null)
             {
                 DbSet.Add(entity);
-                await _contexto.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 return entity;
             }
@@ -60,7 +60,7 @@ namespace Infrastructure.Repositories
             if (entity is not null)
             {
                 DbSet.Entry(entity).State = EntityState.Modified;
-                await _contexto.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 return entity;
             }
@@ -74,12 +74,12 @@ namespace Infrastructure.Repositories
         {
             var entity = await DbSet.FindAsync(id);
             DbSet.Remove(entity);
-            await _contexto.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()
         {
-            _contexto?.Dispose();
+            _context?.Dispose();
         }
     }
 }

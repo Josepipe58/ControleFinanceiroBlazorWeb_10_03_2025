@@ -18,8 +18,12 @@ namespace Application.DependenciesApp
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddScoped<IAnoService, AnoService>();
+            services.AddScoped<IFiltrarCategoriaService, FiltrarCategoriaService>();
+            services.AddScoped<ICategoriaService, CategoriaService>();
 
             services.AddScoped<IAnoRepository, AnoRepository>();
+            services.AddScoped<IFiltrarCategoriaRepository, FiltrarCategoriaRepository>();
+            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
             return services;
         }

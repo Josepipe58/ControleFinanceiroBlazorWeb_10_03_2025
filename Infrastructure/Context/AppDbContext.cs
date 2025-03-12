@@ -11,6 +11,8 @@ namespace Infrastructure.Context
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public virtual DbSet<Ano> TAno { get; set; }
+        public virtual DbSet<FiltrarCategoria> TFiltrarCategoria { get; set; }
+        public virtual DbSet<Categoria> TCategoria { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

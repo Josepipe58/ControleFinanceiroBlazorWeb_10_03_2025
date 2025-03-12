@@ -34,7 +34,7 @@
 
     protected override async Task OnInitializedAsync()
     {        
-        Ano = await _anoService.ObterAnoPorId(Id); //_anoRepository.ObterPorIdAsync(Id);
+        Ano = await _anoService.ObterAnoPorId(Id);
         if (Ano.Id <= 0)
         {
             NavigationManager.NavigateTo($"Erro ao excluir o ano informado.");
@@ -43,7 +43,7 @@
 
     private async Task Excluir()
     {
-        await _anoService.ExcluirAno(Id); //_anoRepository.ExcluirAsync(Ano.Id);
+        await _anoService.ExcluirAno(Id);
         NavigationManager.NavigateTo("/anos");
     }
 }

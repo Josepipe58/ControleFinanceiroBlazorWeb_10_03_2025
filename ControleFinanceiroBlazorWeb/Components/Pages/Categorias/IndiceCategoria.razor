@@ -1,0 +1,45 @@
+﻿@page "/categorias"
+<PageTitle>IndiceCategoria</PageTitle>
+<hr style="color:blue"/>
+<h1 style="color:blue">Página Inicial de Categorias</h1>
+<p>
+    <a href="categorias/cadastrar">Adicionar Nova Categoria</a>
+</p>
+@if (ListaDeCategorias is not null)
+{
+    <TableTemplate RowType="Categoria" RowData="ListaDeCategorias">
+        <Header>
+            <tr>
+            <th>Código</th>
+            <th>Nome do Filtro</th>
+            <th>Código</th>
+            <th>Nome Da Categoria</th>
+            <th>Menu de Opções</th>
+            </tr>
+        </Header>
+        <RowTemplate Context="categoria">
+            <td>@categoria.FiltrarCategoriaId</td>
+            <td>@categoria.NomeDoFiltro</td>
+            <td>@categoria.Id</td>
+            <td>@categoria.NomeDaCategoria</td>
+            <td>
+                <a href="@($"categorias/editar?id={categoria.Id}")">Editar</a> |
+                <a href="@($"categorias/excluir?id={categoria.Id}")">Excluir</a>
+            </td>
+        </RowTemplate>
+    </TableTemplate>
+}
+else
+{
+    <DisplayMessage ErrorMessage="@errorMessage" />
+}
+@code {   
+    public Categoria Categoria;
+    public IEnumerable<Categoria> ListaDeCategorias = new List<Categoria>();
+    private string errorMessage = string.Empty; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaDeCategorias = await _categoriaService.ObterCategoriasComFiltros();
+    }
+}
